@@ -46,97 +46,103 @@ def log_parser(name, fout1, fout2, fout3, fout4):
             sline = re.sub(r'^(\S+) (\S+) (\S+) \[([^\]]+)\] "([^"]+)" ([0-9]{3}) ([0-9]+|-)', r'\1"\2"\3"\4"\5"\6"\7"', line)
             p = re.compile(r'([^"]+)"') #   A char " is Delimiter, instead of ,
             m = p.findall(sline)
-            #print(len(m),m) 
+            #print(len(m),m)
             a=len(m)
-            iphost=actime=crequest=cstatus=csize='' 
-            if a>0: iphost = m[0]   # ip / hostname
-            if a>3: actime = m[3]   # access time
-            if a>4: crequest = m[4] # resource required by client
-            if a>5: cstatus = m[5]  # client status
-            if a>6: csize = m[6]    # object size sent to client
-            #print("iphost, access time, status, size=",iphost,actime,cstatus,csize)
+            iphost=actime=crequest=cstatus=csize=resource=hour1=hour2=''
+            status=0
+            nlevel=0 # 0: line error, 1: word error, 2: convert error, 3: ok
+            if a>6:
+                nlevel=1 ### 
+                iphost = m[0]   # ip / hostname
+                actime = m[3]   # access time
+                crequest = m[4] # resource required by client
+                cstatus = m[5]  # client status
+                csize = m[6]    # object size sent to client
+                #print("iphost, access time, status, size=",iphost,actime,cstatus,csize)
 
-            #1 hosts.txt
-            if iphost in fdic1:
-                n = fdic1[iphost]
-                del fdic1[iphost]
-                fdic1[iphost] = n + 1  # Access# n++
-            else:
-                fdic1[iphost] = 1      # append the host
+                rlist = crequest.split()
+                tlist = actime.split()
+                if (len(actime)==26)&(len(rlist)>2)&(csize.isdigit()==True)&(len(tlist)==2)&(cstatus.isdigit()==True):
+                    nlevel=2 ###
+                    resource = rlist[1] # 0='GET' 1='/...jpg' 2='HTTP1.0/...'
+                    #print('resource=', resource, ' size=',csize)
+                    status = int(cstatus)
+                    # epoch time
+                    hour1 = tlist[0] # 0='01/Jul/1995:00:00:01' 1='-0400'
+                    #print('hour =', hour1[:-6], end='') # '01/Jul/1995:00'
+                    if len(hour1)==20:
+                        nlevel=3 ###
+                        hour2 = hour1[:-6]
+                        tfmt2 = '%d/%b/%Y:%H:%M:%S'   # %b=Jul, Aug, ...
+                        epoch_time = datetime_to_epoch(hour1, tfmt2)
+                        
+                    #else:
+                        #print("*** error in convert ***")
 
-            #2 resources.txt
-            rlist = crequest.split()
-            resource = ''
-            if len(rlist)>2:
-              resource = rlist[1] # 0='GET' 1='/...jpg' 2='HTTP1.0/...'
-            #print('resource=', resource, ' size=',csize)
-            if csize.isdigit()==True:
+                #else:
+                    #print("** error in word parser **")
+
+            #else:
+                #print("* error in line parser *")
+
+            #print(nlevel)
+            if nlevel==3:   # ok
+                #1 hosts.txt
+                if iphost in fdic1:
+                    n = fdic1[iphost]
+                    del fdic1[iphost]
+                    fdic1[iphost] = n + 1  # Access# n++
+                else:
+                    fdic1[iphost] = 1      # append the host
+                
+                #2 resources.txt
                 if resource in fdic2:
                     n = fdic2[resource]
                     del fdic2[resource]
                     fdic2[resource] = n + int(csize)  # Bandwidth += csize
                 elif resource != '/':
                     fdic2[resource] = int(csize)      # append the resource
-
-            #3 hours.txt
-            tlist = actime.split()
-            hour1=hour2=''
-            if len(tlist)>0:
-              hour1 = tlist[0] # 0='01/Jul/1995:00:00:01' 1='-0400'
-              #print('hour =', hour1[:-6], end='') # '01/Jul/1995:00'
-              hour2 = hour1[:-6]
-              if hour2 in fdic3:
-                  n = fdic3[hour2]
-                  del fdic3[hour2]
-                  fdic3[hour2] = n + 1  # Access# n++
-              else:
-                  fdic3[hour2] = 1      # append the hour
-
-            #4 blocked.txt    # status=401,HTTP_UNAUTHORIZED
-                              # iphost is ready.
-            #4-1-1 status
-            if cstatus.isdigit()==True:
-                status = int(cstatus)
-            else:
-                print("*abnormal cstatus: ",cstatus)
-                status = -1   # no status info? (-)
-
-            #4-1-2 epock time
-            tfmt2 = '%d/%b/%Y:%H:%M:%S'   # %b=Jul, Aug, ...
-            if hour1!='':
-              epoch_time = datetime_to_epoch(hour1, tfmt2)
-            
-            #4-2 release by normal login
-            if status<400:
-                for i in range(0, len(blk_host)-1):
-                    if blk_host[i]==iphost:       # normal login
-                        blk_host.pop(i)
-                        blk_n.pop(i)
-                        blk_epoch.pop(i)
-
-            #4-3 register by login failure
-            if status>=400:
-                if blk_host.count(iphost)==0: # Append new blk_host
-                    blk_host.append(iphost)
-                    blk_n.append(int(1))
-                    blk_epoch.append(epoch_time)
+                
+                #3 hours.txt
+                if hour2 in fdic3:
+                    n = fdic3[hour2]
+                    del fdic3[hour2]
+                    fdic3[hour2] = n + 1  # Access# n++
                 else:
-                    i = blk_host.index(iphost)
-                    blk_n[i] += 1             # Access# n++
-                    if blk_n[i] > 2: # There are 3 times of login failure
-                        if (epoch_time - blk_epoch[i])>20: # 20 second window
+                    fdic3[hour2] = 1      # append the hour
+
+                #4 blocked.txt    # status=401,HTTP_UNAUTHORIZED            
+                #4-1 release by normal login
+                if status<400:
+                    for i in range(0, len(blk_host)-1):
+                        if blk_host[i]==iphost:       # normal login
                             blk_host.pop(i)
                             blk_n.pop(i)
                             blk_epoch.pop(i)
-                        else:
-                            #4 blocked.txt
-                            with open(fout4,'a') as fw4:
-                                fmt4_msg = '%s: %s\n' % (iphost, epoch_to_datetime(blk_epoch[i]))
-                                fw4.write(fmt4_msg)
+
+                #4-2 register by login failure
+                if status>=400:
+                    if blk_host.count(iphost)==0: # Append new blk_host
+                        blk_host.append(iphost)
+                        blk_n.append(int(1))
+                        blk_epoch.append(epoch_time)
+                    else:
+                        i = blk_host.index(iphost)
+                        blk_n[i] += 1             # Access# n++
+                        if blk_n[i] > 2: # There are 3 times of login failure
+                            if (epoch_time - blk_epoch[i])>20: # 20 second window
+                                blk_host.pop(i)
+                                blk_n.pop(i)
+                                blk_epoch.pop(i)
+                            else:
+                                #4 blocked.txt
+                                with open(fout4,'a') as fw4:
+                                    fmt4_msg = '%s: %s\n' % (iphost, epoch_to_datetime(blk_epoch[i]))
+                                    fw4.write(fmt4_msg)
                             
-                            blk_host.pop(i)
-                            blk_n.pop(i)
-                            blk_epoch.pop(i)
+                                blk_host.pop(i)
+                                blk_n.pop(i)
+                                blk_epoch.pop(i)
 
             line = fr.readline()
             nline+=1
@@ -193,7 +199,7 @@ def log_parser(name, fout1, fout2, fout3, fout4):
     return name   
 
 # Main Routine: Begin
-filename='log.txt'  # Input filename
+filename='./log_input/log.txt'  # Input filename
 f1='./log_output/hosts.txt'      # Feature 1: top 10 most active hosts/IP addresses that have accessed the site
 f2='./log_output/resources.txt'  # Feature 2: top 10 resources on the site that consume the most bandwidth
 f3='./log_output/hours.txt'      # Feature 3: the site’s 10 busiest 60-minute period3
