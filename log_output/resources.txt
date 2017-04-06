@@ -1,11 +1,11 @@
 #: resource, total bytes
-1: /shuttle/missions/sts-71/movies/sts-71-launch.mpg,676292736
-2: /shuttle/missions/sts-71/movies/sts-71-tcdt-crew-walkout.mpg,659547072
-3: /shuttle/missions/sts-53/movies/sts-53-launch.mpg,425470032
-4: /shuttle/countdown/count.gif,360777100
-5: /shuttle/missions/sts-71/movies/sts-71-mir-dock.mpg,312320972
-6: /shuttle/countdown/video/livevideo.gif,267981793
-7: /shuttle/missions/sts-71/movies/sts-71-hatch-hand-group.mpg,258652189
-8: /shuttle/missions/sts-71/movies/crew-arrival-t38.mpg,213336870
-9: /shuttle/missions/sts-71/movies/sts-71-mir-dock-2.mpg,191817690
-10: /shuttle/technology/sts-newsref/stsref-toc.html,142180292
+1: /shuttle/missions/sts-71/movies/sts-71-launch.mpg,4830851820
+2: /shuttle/missions/sts-71/movies/sts-71-tcdt-crew-walkout.mpg,4505833864
+3: /shuttle/missions/sts-53/movies/sts-53-launch.mpg,3160325280
+4: /shuttle/countdown/count70.gif,1959049585
+5: /shuttle/technology/sts-newsref/stsref-toc.html,1256215694
+6: /shuttle/countdown/video/livevideo2.gif,1169155568
+7: /shuttle/countdown/count.gif,1154002480
+8: /shuttle/countdown/video/livevideo.gif,1128333928
+9: /shuttle/missions/sts-71/movies/sts-71-mir-dock.mpg,1095681435
+10: /history/apollo/apollo-13/movies/apo13damage.mpg,967648747

@@ -1,11 +1,11 @@
 #: hostname, # of access
-1: piweba3y.prodigy.com,3167
-2: alyssa.prodigy.com,1761
-3: piweba1y.prodigy.com,1518
-4: disarray.demon.co.uk,1242
-5: www-b6.proxy.aol.com,1099
-6: piweba4y.prodigy.com,998
-7: www-d3.proxy.aol.com,883
-8: piweba2y.prodigy.com,764
-9: www-d4.proxy.aol.com,746
-10: edams.ksc.nasa.gov,670
+1: piweba3y.prodigy.com,22096
+2: piweba4y.prodigy.com,14785
+3: piweba1y.prodigy.com,12730
+4: siltb10.orl.mmc.com,10568
+5: alyssa.prodigy.com,10092
+6: edams.ksc.nasa.gov,9046
+7: piweba2y.prodigy.com,7897
+8: 163.206.89.4,6475
+9: www-d3.proxy.aol.com,6212
+10: vagrant.vf.mmc.com,6074
