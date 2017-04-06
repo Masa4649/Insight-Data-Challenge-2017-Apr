@@ -1,11 +1,11 @@
 #: resource, total bytes
-1: /shuttle/missions/sts-71/movies/sts-71-launch.mpg,134981946
-2: /shuttle/missions/sts-71/movies/sts-71-tcdt-crew-walkout.mpg,127593680
-3: /shuttle/missions/sts-53/movies/sts-53-launch.mpg,80123312
-4: /shuttle/countdown/count.gif,74130090
-5: /shuttle/missions/sts-71/movies/sts-71-mir-dock.mpg,61217372
-6: /shuttle/countdown/video/livevideo.gif,57246277
-7: /shuttle/missions/sts-71/movies/sts-71-hatch-hand-group.mpg,54855561
-8: /shuttle/missions/sts-71/movies/crew-arrival-t38.mpg,43135348
-9: /shuttle/missions/sts-71/movies/sts-71-mir-dock-2.mpg,38961364
-10: /shuttle/technology/sts-newsref/stsref-toc.html,30300029
+1: /shuttle/missions/sts-71/movies/sts-71-launch.mpg,676292736
+2: /shuttle/missions/sts-71/movies/sts-71-tcdt-crew-walkout.mpg,659547072
+3: /shuttle/missions/sts-53/movies/sts-53-launch.mpg,425470032
+4: /shuttle/countdown/count.gif,360777100
+5: /shuttle/missions/sts-71/movies/sts-71-mir-dock.mpg,312320972
+6: /shuttle/countdown/video/livevideo.gif,267981793
+7: /shuttle/missions/sts-71/movies/sts-71-hatch-hand-group.mpg,258652189
+8: /shuttle/missions/sts-71/movies/crew-arrival-t38.mpg,213336870
+9: /shuttle/missions/sts-71/movies/sts-71-mir-dock-2.mpg,191817690
+10: /shuttle/technology/sts-newsref/stsref-toc.html,142180292

@@ -47,11 +47,13 @@ def log_parser(name, fout1, fout2, fout3, fout4):
             p = re.compile(r'([^"]+)"') #   A char " is Delimiter, instead of ,
             m = p.findall(sline)
             #print(len(m),m) 
-            iphost = m[0]   # ip / hostname
-            actime = m[3]   # access time
-            crequest = m[4] # resource required by client
-            cstatus = m[5]  # client status
-            csize = m[6]    # object size sent to client
+            a=len(m)
+            #
+            if a>0: iphost = m[0]   # ip / hostname
+            if a>3: actime = m[3]   # access time
+            if a>4: crequest = m[4] # resource required by client
+            if a>5: cstatus = m[5]  # client status
+            if a>6: csize = m[6]    # object size sent to client
             #print("iphost, access time, status, size=",iphost,actime,cstatus,csize)
 
             #1 hosts.txt
@@ -133,7 +135,7 @@ def log_parser(name, fout1, fout2, fout3, fout4):
 
             line = fr.readline()
             nline+=1
-            if nline>100000: break #=== stop the loop to limit the number of events ===#
+            #if nline>100000: break #=== stop the loop to limit the number of events ===#
     # Event Loop: End
 
     #=== Output Files for Feature 1,2,3
