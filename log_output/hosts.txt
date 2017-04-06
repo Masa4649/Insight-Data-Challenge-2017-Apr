@@ -1,0 +1,11 @@
+#: hostname, # of access
+1: piweba3y.prodigy.com,490
+2: disarray.demon.co.uk,379
+3: alyssa.prodigy.com,363
+4: burger.letters.com,348
+5: poppy.hensa.ac.uk,306
+6: piweba4y.prodigy.com,300
+7: 131.182.28.171,278
+8: piweba1y.prodigy.com,254
+9: lab8.pc.fsu.edu,206
+10: dawn14.cs.berkeley.edu,195
