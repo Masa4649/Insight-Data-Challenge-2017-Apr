@@ -48,7 +48,7 @@ def log_parser(name, fout1, fout2, fout3, fout4):
             m = p.findall(sline)
             #print(len(m),m) 
             a=len(m)
-            #
+            iphost=actime=crequest=cstatus=csize='' 
             if a>0: iphost = m[0]   # ip / hostname
             if a>3: actime = m[3]   # access time
             if a>4: crequest = m[4] # resource required by client
@@ -66,7 +66,9 @@ def log_parser(name, fout1, fout2, fout3, fout4):
 
             #2 resources.txt
             rlist = crequest.split()
-            resource = rlist[1] # 0='GET' 1='/...jpg' 2='HTTP1.0/...'
+            resource = ''
+            if len(rlist)>2:
+              resource = rlist[1] # 0='GET' 1='/...jpg' 2='HTTP1.0/...'
             #print('resource=', resource, ' size=',csize)
             if csize.isdigit()==True:
                 if resource in fdic2:
@@ -78,15 +80,17 @@ def log_parser(name, fout1, fout2, fout3, fout4):
 
             #3 hours.txt
             tlist = actime.split()
-            hour1 = tlist[0] # 0='01/Jul/1995:00:00:01' 1='-0400'
-            #print('hour =', hour1[:-6], end='') # '01/Jul/1995:00'
-            hour2 = hour1[:-6]
-            if hour2 in fdic3:
-                n = fdic3[hour2]
-                del fdic3[hour2]
-                fdic3[hour2] = n + 1  # Access# n++
-            else:
-                fdic3[hour2] = 1      # append the hour
+            hour1=hour2=''
+            if len(tlist)>0:
+              hour1 = tlist[0] # 0='01/Jul/1995:00:00:01' 1='-0400'
+              #print('hour =', hour1[:-6], end='') # '01/Jul/1995:00'
+              hour2 = hour1[:-6]
+              if hour2 in fdic3:
+                  n = fdic3[hour2]
+                  del fdic3[hour2]
+                  fdic3[hour2] = n + 1  # Access# n++
+              else:
+                  fdic3[hour2] = 1      # append the hour
 
             #4 blocked.txt    # status=401,HTTP_UNAUTHORIZED
                               # iphost is ready.
@@ -99,7 +103,8 @@ def log_parser(name, fout1, fout2, fout3, fout4):
 
             #4-1-2 epock time
             tfmt2 = '%d/%b/%Y:%H:%M:%S'   # %b=Jul, Aug, ...
-            epoch_time = datetime_to_epoch(tlist[0], tfmt2)
+            if hour1!='':
+              epoch_time = datetime_to_epoch(hour1, tfmt2)
             
             #4-2 release by normal login
             if status<400:
@@ -135,7 +140,7 @@ def log_parser(name, fout1, fout2, fout3, fout4):
 
             line = fr.readline()
             nline+=1
-            #if nline>100000: break #=== stop the loop to limit the number of events ===#
+            #if nline>500000: break #=== stop the loop to limit the number of events ===#
     # Event Loop: End
 
     #=== Output Files for Feature 1,2,3
